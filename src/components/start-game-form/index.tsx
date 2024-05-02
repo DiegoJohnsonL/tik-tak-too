@@ -28,7 +28,7 @@ export default function StartGameForm({
                 type="text"
                 name="username"
                 required={user ? false : true}
-                className="px-4 py-2 text-md md:text-lg lg:text-xl text-tik-orange font-finger text-center bg-tik-bg  focus:outline-0 ring-1 ring-tik-winning focus:ring-tik-orange rounded-lg"
+                className="px-4 py-2 text-md md:text-lg lg:text-xl text-tik-orange font-finger text-center bg-tik-bg  focus:outline-0 ring-1 ring-tik-winning focus:ring-tik-orange rounded-lg dark:focus:ring-tik-orange"
               />
               <p aria-live="polite" className="pt-2 text-red-400">
                 {state?.error}
