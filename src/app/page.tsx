@@ -1,62 +1,20 @@
-import { auth } from "@@/edgedb";
-import Link from "next/link";
+import StartGameForm from "@/components/start-game-form";
+import SubmitButton from "@/components/submit-button";
+import { joinGame } from "@/server/services/game-service";
+import { getCurrentUser } from "@/server/services/session-service";
+import { ServerError } from "@/types/server-error";
 
 export default async function Home() {
-  const session = auth.getSession();
-
-  const signedIn = await session.isSignedIn();
-
-  console.log(signedIn);
-
+  const { user, error } = getCurrentUser();
   return (
-    <div>
-      <header className="absolute inset-x-0 top-0 z-50">
-        <nav
-          className="flex items-center justify-between p-6 lg:px-8"
-          aria-label="Global">
-          <div className="flex flex-1 justify-end space-x-2">
-            {!signedIn ? (
-              <>
-                <Link
-                  href={auth.getBuiltinUIUrl()}
-                  className="text-sm font-semibold leading-6 text-gray-800">
-                  <button className="ring-2 ring-inset ring-primary bg-primarylight px-4 py-2 rounded-md">
-                    Sign in
-                  </button>
-                </Link>
-                <Link
-                  href={auth.getBuiltinUISignUpUrl()}
-                  className="text-sm font-semibold leading-6 text-gray-900">
-                  <button className="bg-primary px-4 py-2 rounded-md">
-                    Sign up
-                  </button>
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  href=""
-                  className="text-sm font-semibold leading-6 text-gray-900">
-                  <button className="bg-primary px-4 py-2 rounded-md">
-                    Dashboard
-                  </button>
-                </Link>
-                <Link
-                  href={auth.getSignoutUrl()}
-                  className="text-sm font-semibold leading-6 text-gray-900">
-                  <button className="bg-primary px-4 py-2 rounded-md">
-                    Logout
-                  </button>
-                </Link>
-              </>
-            )}
-          </div>
-        </nav>
-      </header>
-
-      <div className="relative isolate px-6 py-14 lg:px-8">
-        <h1>Tik Tak Too</h1>
-      </div>
+    <div className="min-h-svh gap-10 flex flex-col items-center justify-center bg-tik-bg">
+      <h1 className="text-4xl md:text-5xl lg:text-7xl uppercase text-tik-orange font-finger text-center">
+        { user ? `Welcome 👋`  : "Choose a username"} 
+      </h1>
+      <h1 className="text-4xl md:text-5xl lg:text-7xl uppercase text-tik-orange font-finger text-center">
+      {user && user.username}
+      </h1>
+      <StartGameForm user={user} />
     </div>
   );
 }

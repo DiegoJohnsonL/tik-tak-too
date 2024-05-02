@@ -1,23 +1,15 @@
 using extension auth;
 
 module default {
-  
-  scalar type Role extending enum<admin, user>;
-  
+    
   global current_user := (
     assert_single((
-      select User { id, name, email, userRole }
-      filter .identity = global ext::auth::ClientTokenIdentity
+      select User { id }
     ))
   );
 
   type User {
-    required identity: ext::auth::Identity;
-    required name: str;
-    email: str;
-    userRole: Role {
-      default := "user";
-    };
+    required username: str;
     created: datetime {
       rewrite insert using (datetime_of_statement());
     }
@@ -27,11 +19,20 @@ module default {
     }
   }
 
-  type Item {
-    required name: str;
-    required created_by: User {
-      default := global current_user;
+  type Game {
+    required createdBy: User;
+    lastMove: GameMove {
+      constraint exclusive;
     }
+    prevMove: GameMove {
+      constraint exclusive;
+    }
+    prevPlayer: User;
+    draw: bool;
+    required gameState: array<str> {
+      default := ["", "", "", "", "", "", "", "", ""];
+    }
+    multi playersHistory := (.<game[is PlayersHistory]);
     created: datetime {
       rewrite insert using (datetime_of_statement());
     }
@@ -39,14 +40,21 @@ module default {
       rewrite insert using (datetime_of_statement());
       rewrite update using (datetime_of_statement());
     }
-
-    access policy admin_has_full_access
-      allow all
-      using (global current_user.userRole ?= Role.admin);
-    access policy creator_has_full_access
-      allow all
-      using (.created_by ?= global current_user);
-    access policy others_read_only
-      allow select, insert;
   }
+
+  type PlayersHistory {
+    multi moves := (.<playersHistory[is GameMove]);
+    required user: User;
+    required game: Game;
+    constraint exclusive on ((.user, .game));
+  }
+
+  type GameMove {
+    required playersHistory: PlayersHistory;
+    symbol: str;
+    position: int16;
+    created: datetime {
+      rewrite insert using (datetime_of_statement());
+      }
+    }
 }

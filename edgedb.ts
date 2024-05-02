@@ -6,6 +6,7 @@ export const client = createClient({
   // insecure, because the development server uses self-signed certificates
   // which will cause api calls with the fetch api to fail.
   tlsSecurity: process.env.NODE_ENV === "development" ? "insecure" : undefined,
+  logging: true,
 });
 
 export const auth = createAuth(client, {

@@ -3,11 +3,6 @@
 @tailwind utilities;
 
 
-body {
-  color: black;
-  background: white;
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
