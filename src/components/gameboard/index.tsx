@@ -48,12 +48,11 @@ export default function GameBoard({ data }: { data: Partial<Game> }) {
           alert(`${move} won!`);
         }, 250);
       }
-      if (draw) {
+      if (draw && !winningCombination) {
         setTimeout(() => {
           alert(`It's a draw!`);
         }, 250);
       }
-      console.log("game", updatedGame.game);
       setGame({...game, ...updatedGame.game} as Game);
       setIsLoading(false);
     };
@@ -61,18 +60,21 @@ export default function GameBoard({ data }: { data: Partial<Game> }) {
     return (
       <>
         <div className="flex justify-between gap-6 md:gap-12 text-tik-orange items-center">
-          <p>Your move is: {move}</p> <p>Last Player: {prevPlayer ?  prevPlayer?.username : "You're first 🫡"}</p>{" "}
-          {game.draw ||
-            (game.lastMove && (
-              <button
-                className="px-4 py-2 text-md md:text-lg lg:text-xl text-tik-orange font-finger text-center bg-tik-winning border border-tik-orange rounded-lg"
-                onClick={() => {
-                  setIsLoading(true);
-                  startNewGame().then(() => setIsLoading(false));
-                }}>
-                Start new game
-              </button>
-            ))}
+          <p>Your move is: {move}</p>{" "}
+          <p>
+            Last Player: {prevPlayer ? prevPlayer?.username : "You're first 🫡"}
+          </p>
+          {(game.draw || game.lastMove) && (
+            <button
+              className="px-4 py-2 text-md md:text-lg lg:text-xl text-tik-orange font-finger text-center bg-tik-winning border border-tik-orange rounded-lg"
+              disabled={isLoading}
+              onClick={() => {
+                setIsLoading(true);
+                startNewGame().then(() => setIsLoading(false));
+              }}>
+              Start new game
+            </button>
+          )}
         </div>
         <div className="grid grid-cols-3 w-full max-w-2xl px-4 md:px-8 gap-[2px]">
           {game.gameState?.map((s, i) => (
@@ -81,7 +83,9 @@ export default function GameBoard({ data }: { data: Partial<Game> }) {
               className={`w-full aspect-square outline outline-2 outline-tik-orange flex justify-center items-center group select-none ${
                 isLoading ? "cursor-wait" : "cursor-pointer"
               } ${
-                winningIndices.includes(i) && game.lastMove ? "bg-tik-winning" : ""
+                winningIndices.includes(i) && game.lastMove
+                  ? "bg-tik-winning"
+                  : ""
               }`}
               onClick={() => onMovePlayed(i)}>
               <p
