@@ -64,7 +64,7 @@ export async function updateGame({
           gameState,
           draw: isDraw,
           prevPlayer: player,
-          lastMove: isWin ? addedMoveQuery : null,
+          lastMove: (isWin || isDraw) ? addedMoveQuery : null,
           prevMove: addedMoveQuery,
         },
       }));
