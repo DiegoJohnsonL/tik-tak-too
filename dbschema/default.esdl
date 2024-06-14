@@ -1,12 +1,6 @@
 using extension auth;
 
 module default {
-    
-  global current_user := (
-    assert_single((
-      select User { id }
-    ))
-  );
 
   type User {
     required username: str;

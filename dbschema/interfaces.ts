@@ -13,51 +13,6 @@ export namespace std {
     export type Base64Alphabet = "standard" | "urlsafe";
   }
 }
-export namespace $default {
-  export interface User extends std.$Object {
-    "created"?: Date | null;
-    "updated"?: Date | null;
-    "username": string;
-  }
-  export interface Game extends std.$Object {
-    "createdBy": User;
-    "prevPlayer"?: User | null;
-    "created"?: Date | null;
-    "draw"?: boolean | null;
-    "gameState": string[];
-    "updated"?: Date | null;
-    "playersHistory": PlayersHistory[];
-    "lastMove"?: GameMove | null;
-    "prevMove"?: GameMove | null;
-  }
-  export interface GameMove extends std.$Object {
-    "created"?: Date | null;
-    "position"?: number | null;
-    "symbol"?: string | null;
-    "playersHistory": PlayersHistory;
-  }
-  export interface PlayersHistory extends std.$Object {
-    "game": Game;
-    "user": User;
-    "moves": GameMove[];
-  }
-  export interface current_user extends User {}
-}
-import User = $default.User;
-import Game = $default.Game;
-import GameMove = $default.GameMove;
-import PlayersHistory = $default.PlayersHistory;
-import current_user = $default.current_user;
-export type {
-  User,
-  Game,
-  GameMove,
-  PlayersHistory,
-  current_user
-};
-export namespace __default {
-  export interface current_user extends $default.User {}
-}
 export namespace cfg {
   export interface ConfigObject extends std.BaseObject {}
   export interface AbstractConfig extends ConfigObject {
@@ -117,6 +72,45 @@ export namespace cfg {
     "transports": ConnectionTransport[];
   }
 }
+export namespace $default {
+  export interface Game extends std.$Object {
+    "createdBy": User;
+    "prevPlayer"?: User | null;
+    "created"?: Date | null;
+    "draw"?: boolean | null;
+    "gameState": string[];
+    "updated"?: Date | null;
+    "playersHistory": PlayersHistory[];
+    "lastMove"?: GameMove | null;
+    "prevMove"?: GameMove | null;
+  }
+  export interface GameMove extends std.$Object {
+    "created"?: Date | null;
+    "position"?: number | null;
+    "symbol"?: string | null;
+    "playersHistory": PlayersHistory;
+  }
+  export interface PlayersHistory extends std.$Object {
+    "game": Game;
+    "user": User;
+    "moves": GameMove[];
+  }
+  export interface User extends std.$Object {
+    "created"?: Date | null;
+    "updated"?: Date | null;
+    "username": string;
+  }
+}
+import Game = $default.Game;
+import GameMove = $default.GameMove;
+import PlayersHistory = $default.PlayersHistory;
+import User = $default.User;
+export type {
+  Game,
+  GameMove,
+  PlayersHistory,
+  User
+};
 export namespace ext {
   export namespace auth {
     export interface ProviderConfig extends cfg.ConfigObject {
@@ -489,16 +483,6 @@ export interface types {
       "Base64Alphabet": std.enc.Base64Alphabet;
     };
   };
-  "default": {
-    "User": $default.User;
-    "Game": $default.Game;
-    "GameMove": $default.GameMove;
-    "PlayersHistory": $default.PlayersHistory;
-    "current_user": $default.current_user;
-  };
-  "__default": {
-    "current_user": __default.current_user;
-  };
   "cfg": {
     "ConfigObject": cfg.ConfigObject;
     "AbstractConfig": cfg.AbstractConfig;
@@ -517,6 +501,12 @@ export interface types {
     "SCRAM": cfg.SCRAM;
     "Trust": cfg.Trust;
     "mTLS": cfg.mTLS;
+  };
+  "default": {
+    "Game": $default.Game;
+    "GameMove": $default.GameMove;
+    "PlayersHistory": $default.PlayersHistory;
+    "User": $default.User;
   };
   "ext": {
     "auth": {
